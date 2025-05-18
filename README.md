@@ -9,6 +9,6 @@ curl -sSL https://raw.githubusercontent.com/Skrepysh/remnawave-motd/refs/heads/m
 ```
 ## Commands
 
-- `rw-motd` — manually display the current MOTD.
+- `sudo rw-motd` — manually display the current MOTD.
 
-- `rw-motd-set` — open a menu to enable/disable MOTD info blocks.
+- `sudo rw-motd-set` — open a menu to enable/disable MOTD info blocks.

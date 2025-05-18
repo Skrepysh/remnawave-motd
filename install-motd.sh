@@ -41,6 +41,8 @@ if [ "$SHOW_MEM" = true ]; then
   echo "💾 Disk.................: $(df -h / | awk 'NR==2{print "Used: " $3 " | Free: " $4 " | Total: " $2}')"
 fi
 
+echo "⚙️ Processes............: $(ps -ef | wc -l) running processes"
+
 echo "🖥  Hostname.............: $(hostname)"
 echo "🧬 OS...................: $(lsb_release -ds 2>/dev/null || grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '\"')"
 

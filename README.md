@@ -5,7 +5,7 @@
 ## Installation
 1. Run the motd install script: 
 ```
-bash <(curl -sSL https://raw.githubusercontent.com/distillium/remnawave-motd/refs/heads/main/install-motd.sh)
+curl -sSL https://raw.githubusercontent.com/Skrepysh/remnawave-motd/refs/heads/main/install-motd.sh | sudo bash
 ```
 ## Commands
 

@@ -37,7 +37,7 @@ echo "🖥️ CPU Model............: $CPU_MODEL"
 echo "📈 Load Average.........: $(cat /proc/loadavg | awk '{print $1 " / " $2 " / " $3}')"
 
 if [ "$SHOW_MEM" = true ]; then
-  echo "🧠 Memory...............: $(free -h | awk '/Mem:/ {print "Used: " $3 " | Available: " $7 " | Free: " $4" | Total: " $2}')"
+  echo "🧠 Memory...............: $(free -h | awk '/Mem:/ {print "Used: " $3 " | Free: " $7 " | Total: " $2}')"
   echo "💾 Disk.................: $(df -h / | awk 'NR==2{print "Used: " $3 " | Free: " $4 " | Total: " $2}')"
 fi
 

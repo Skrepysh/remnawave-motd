@@ -133,9 +133,9 @@ for VAR in SHOW_MEM SHOW_NET SHOW_FIREWALL SHOW_DOCKER; do
   fi
 done
 
-echo "Настройки обновлены. Проверь командой: rw-motd"
+echo "Настройки обновлены. Проверь командой: sudo rw-motd"
 EOF
 
 chmod +x /usr/local/bin/rw-motd-set
 
-echo "✅ Установка завершена. Используй 'rw-motd' для ручного вывода или 'rw-motd-set' для настройки."
+echo "✅ Установка завершена. Используй 'sudo rw-motd' для ручного вывода или 'sudo rw-motd-set' для настройки."

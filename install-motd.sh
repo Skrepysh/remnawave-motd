@@ -27,10 +27,7 @@ echo -e "\e[1;37m"
 toilet -f standard -F metal "skrepysh.dll"
 echo
 
-LAST_LOGIN=$(last -i -w $(whoami) | grep -v "still logged in" | grep -v "0.0.0.0" | grep -v "127.0.0.1" | sed -n 2p)
-LAST_DATE=$(echo "$LAST_LOGIN" | awk '{print $4, $5, $6, $7}')
-LAST_IP=$(echo "$LAST_LOGIN" | awk '{print $3}')
-echo "🔑 Last login...........: $LAST_DATE from IP $LAST_IP"
+echo "🔑 Last login...........: $(last | head -1 | cut -c 1-9 | xargs) at $(last | head -1 | cut -c 40-55 | xargs) from $(last | head -1 | cut -c 23-39 | xargs)"
 
 echo "⏳ Uptime...............: $(uptime -p | sed 's/up //')"
 

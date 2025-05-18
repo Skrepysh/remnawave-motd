@@ -33,7 +33,6 @@ LAST_DATE=$(echo "$LAST_LOGIN" | awk '{print $4, $5, $6, $7}')
 LAST_IP=$(echo "$LAST_LOGIN" | awk '{print $3}')
 echo "🔑 Last login...........: $LAST_DATE from IP $LAST_IP"
 
-echo "👤 User.................: $(whoami)"
 echo "⏳ Uptime...............: $(uptime -p | sed 's/up //')"
 
 CPU_MODEL=$(grep -m1 "model name" /proc/cpuinfo | cut -d ':' -f2 | sed 's/^ //')
@@ -48,11 +47,11 @@ fi
 echo "📈 Load Average.........: $(cat /proc/loadavg | awk '{print $1 " / " $2 " / " $3}')"
 
 if [ "$SHOW_MEM" = true ]; then
-  echo "🧠 Memory...............: $(free -h | awk '/Mem:/ {print "Used: " $3 " | Free: " $4 " | Total: " $2}')"
+  echo "🧠 Memory...............: $(free -h | awk '/Mem:/ {print "Used: " $3 " | Available: " $7 " | Cached: " $6" | Free: " $4" | Total: " $2}')"
   echo "💾 Disk.................: $(df -h / | awk 'NR==2{print "Used: " $3 " | Free: " $4 " | Total: " $2}')"
 fi
 
-echo "🖥 Hostname.............: $(hostname)"
+echo "🖥  Hostname.............: $(hostname)"
 echo "🧬 OS...................: $(lsb_release -ds 2>/dev/null || grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '\"')"
 
 if [ "$SHOW_NET" = true ]; then
@@ -65,11 +64,21 @@ if [ "$SHOW_NET" = true ]; then
         local BYTES=$1
         local UNITS=('B' 'KB' 'MB' 'GB' 'TB')
         local UNIT=0
-        while (( BYTES > 1024 && UNIT < 4 )); do
-          BYTES=$((BYTES / 1024))
+        local VALUE=$BYTES
+
+        while (( VALUE >= 1024 && UNIT < 4 )); do
+          VALUE=$((VALUE / 1024))
           ((UNIT++))
         done
-        echo "${BYTES} ${UNITS[$UNIT]}"
+
+        local DIVISOR=$((1024 ** UNIT))
+        local FLOAT_VAL=$(awk "BEGIN {printf \"%.2f\", $BYTES / $DIVISOR}")
+
+        if (( UNIT >= 3 )); then
+          echo "${FLOAT_VAL} ${UNITS[$UNIT]}"
+        else
+          echo "$((BYTES / DIVISOR)) ${UNITS[$UNIT]}"
+        fi
       }
 
       RX_HR=$(human_readable $RX_BYTES)
@@ -94,10 +103,9 @@ if [ "$SHOW_DOCKER" = true ]; then
   if command -v docker &>/dev/null; then
     RUNNING_CONTAINERS=$(docker ps -q | wc -l)
     TOTAL_CONTAINERS=$(docker ps -a -q | wc -l)
-    echo "🐳 Docker containers....: $RUNNING_CONTAINERS / $TOTAL_CONTAINERS running"
+    echo "🐳 Docker containers....: $RUNNING_CONTAINERS / $TOTAL_CONTAINERS running:"
     if [ "$RUNNING_CONTAINERS" -gt 0 ]; then
-      echo "  Running container list:"
-      docker ps --format "    • {{.Names}}"
+      docker ps --format "   • {{.Names}}" | while read line; do printf "   %s\n" "$line"; done
     fi
   else
     echo "🐳 Docker...............: not installed"

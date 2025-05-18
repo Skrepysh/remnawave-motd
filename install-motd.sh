@@ -25,7 +25,7 @@ cat << 'EOF' > /etc/update-motd.d/00-remnawave
 source /etc/rw-motd.conf
 
 echo -e "\e[1;37m"
-toilet -f standard -F metal "remnawave"
+toilet -f standard -F metal "skrepysh.dll"
 echo
 
 LAST_LOGIN=$(last -i -w $(whoami) | grep -v "still logged in" | grep -v "0.0.0.0" | grep -v "127.0.0.1" | sed -n 2p)
@@ -55,7 +55,7 @@ echo "🖥  Hostname.............: $(hostname)"
 echo "🧬 OS...................: $(lsb_release -ds 2>/dev/null || grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '\"')"
 
 if [ "$SHOW_NET" = true ]; then
-  NET_IFACE=$(ip route get 8.8.8.8 2>/dev/null | awk '{for(i=1;i<=NF;i++) if($i=="dev") print $(i+1)}')
+  NET_IFACE=$(ip route get 1.1.1.1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if($i=="dev") print $(i+1)}')
   if [ -n "$NET_IFACE" ]; then
       RX_BYTES=$(cat /sys/class/net/$NET_IFACE/statistics/rx_bytes)
       TX_BYTES=$(cat /sys/class/net/$NET_IFACE/statistics/tx_bytes)

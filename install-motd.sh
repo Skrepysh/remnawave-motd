@@ -9,7 +9,6 @@ apt-get install -y toilet figlet procps lsb-release whiptail > /dev/null
 echo "Creating MOTD config..."
 CONFIG_FILE="/etc/rw-motd.conf"
 cat <<EOF > "$CONFIG_FILE"
-SHOW_CPU=true
 SHOW_MEM=true
 SHOW_NET=true
 SHOW_DOCKER=true
@@ -37,12 +36,6 @@ echo "⏳ Uptime...............: $(uptime -p | sed 's/up //')"
 
 CPU_MODEL=$(grep -m1 "model name" /proc/cpuinfo | cut -d ':' -f2 | sed 's/^ //')
 echo "🖥️ CPU Model............: $CPU_MODEL"
-
-if [ "$SHOW_CPU" = true ]; then
-  CPU_IDLE=$(vmstat 1 2 | tail -1 | awk '{print $15}')
-  CPU_USAGE=$((100 - CPU_IDLE))
-  echo "⚡️ CPU Usage............: ${CPU_USAGE}%"
-fi
 
 echo "📈 Load Average.........: $(cat /proc/loadavg | awk '{print $1 " / " $2 " / " $3}')"
 
@@ -129,14 +122,13 @@ CONFIG="/etc/rw-motd.conf"
 
 CHOICES=$(whiptail --title "MOTD Settings" --checklist \
 "Выберите, что отображать в MOTD:" 20 60 10 \
-"SHOW_CPU" "Загрузка процессора" $(grep -q 'SHOW_CPU=true' "$CONFIG" && echo ON || echo OFF) \
 "SHOW_MEM" "Память и диск" $(grep -q 'SHOW_MEM=true' "$CONFIG" && echo ON || echo OFF) \
 "SHOW_NET" "Сетевой трафик" $(grep -q 'SHOW_NET=true' "$CONFIG" && echo ON || echo OFF) \
 "SHOW_FIREWALL" "Статус UFW" $(grep -q 'SHOW_FIREWALL=true' "$CONFIG" && echo ON || echo OFF) \
 "SHOW_DOCKER" "Контейнеры Docker" $(grep -q 'SHOW_DOCKER=true' "$CONFIG" && echo ON || echo OFF) \
 3>&1 1>&2 2>&3)
 
-for VAR in SHOW_CPU SHOW_MEM SHOW_NET SHOW_FIREWALL SHOW_DOCKER; do
+for VAR in SHOW_MEM SHOW_NET SHOW_FIREWALL SHOW_DOCKER; do
   if echo "$CHOICES" | grep -q "$VAR"; then
     sed -i "s/^$VAR=.*/$VAR=true/" "$CONFIG"
   else
